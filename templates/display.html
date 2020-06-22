@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+<style>
+    .fl{
+        margin: 0px;
+    }
+    .my-crd{
+        height: 13rem;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid mt-5">
+    <a class="btn btn-danger" href="/">Back</a>
+    <p class="h1 text-center">Scrapping Results</p>
+    
+
+    <div class="row" id="results">
+        
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script>
+    $(document).ready(() => {
+
+        list_feature = (str) => {
+            let flist = str.split(',');
+            let lis = '';
+            for(let f of flist.slice(0, 4)){
+                lis += `<p class="fl">${f}</p>`;
+            }
+            return lis;
+        }
+
+        data = JSON.parse(sessionStorage.getItem('data'))
+        console.log(data)
+
+        data.forEach(item => {
+            $('#results').append(`
+            <div class="col-md-3">
+                <div class="card mt-5 my-crd">
+                    <div class="card-body">
+                        <h4><a href="${item.link}" style="color : black">${item.name}</a></h4>
+                        <p class="h6">${item.rating}</p>
+                        <p class="h6">Average Rating : ${item.avgrating}</p>
+                        <p class="h3">₹ ${item.price} </p>
+                    </div>
+                </div>
+            </div>
+            `
+            )
+        });
+    });
+</script>
+{% endblock %}

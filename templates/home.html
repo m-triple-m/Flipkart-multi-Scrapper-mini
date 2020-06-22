@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Brand</title>
+    <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
+    <link rel="stylesheet" href="static/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="static/assets/fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <style>
+        .mid-card{
+            box-shadow: 3px 3px 5px 1px rgba(0, 0, 0, 0.698);
+        }
+        .header-mg{
+            background: linear-gradient(rgba(4, 110, 69, 0.466), rgba(93, 0, 0, 0.493)),
+            url('static/assets/img/bg-masthead.png');
+            background-size:cover
+        }
+        .input-card{
+            border-left: 4px solid blue;
+            box-shadow: 2px 2px 30px 10px rgba(0, 0, 0, 0.287);
+        }
+        .content{
+            padding-top: 1rem;
+            font-size: larger;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: rgb(0, 0, 0, 0.3);">
+        <a class="navbar-brand" href="/">Flipkart Multipage Scraping System</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a href="report" class="nav-link" >View Report</a>
+            </li>
+            {% if not loggedin %}
+            <li class="nav-item">
+              <a class="nav-link" href="/signin">login</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">logout</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" style="color: black;"><strong>Hello {{loggedin}}</strong></a>
+            </li>
+            {% endif %}
+            
+          </ul>
+        </div>
+      </nav>
+
+    <header class="masthead text-white text-center header-mg">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-8 mx-auto" style="text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.698)">
+                    <h1>Flipkart Multipage Scraping System</h1>
+                    <h3 class="mb-5">Proposed system is an automated system to collect various product data from multiple pages of Flipkart</h3>
+                </div>
+            </div>
+        </div>
+        
+    </header>
+
+    <section class="container mt-5 mb-5">
+        <div class="card">
+            <div class="card-body">
+                <p class="h2 text-center">Steps To Use Scrapper</p>
+                <hr>
+                <div class="card-body">
+                    <p class="mt-5 h4">
+                        Step-1 : Enter Product Name and hit search
+                    </p>
+                    <p class="mt-5 h4">
+                        Step-2 : Collect the Scraped Data
+                    </p>
+                    <p class="mt-5 h4">
+                        Step-3 : Use the collected dataset
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mb-5">
+        <div class="card input-card">
+            <div class="card-body">
+                <h1 class="text-center">Search Product here</h1>
+                <hr>
+                <div class="row mt-5">
+                    <div class="col-md-8">
+                        <label>Product Name</label>
+                        <input class="form-control" name="product" id="product">
+                    </div>
+    
+                    <div class="col-md-4">
+                        <label>Maximum no. of Pages</label>
+                        <input class="form-control" name="max" id="max">
+                    </div>
+                </div>
+
+                <button class="btn btn-outline-primary mt-5 btn-lg btn-block" id="start">Search</button>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+
+    <script src="static/assets/js/jquery.min.js"></script>
+    <script src="static/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="static/assets/js/bs-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <script>
+        $(document).ready(() => {
+
+            $('#start').click(() => {
+            const product = $('#product').val()
+            const max = $('#max').val()
+            const website = $('input[name="website"]:checked').val();
+
+            $.ajax({url : '/scrap', data : {product : product, maxpages : max, website : website}, method : "get", complete : (data) => {
+                console.log(data.responseJSON);
+                sessionStorage.setItem('data', JSON.stringify(data.responseJSON))
+                    Swal.fire({
+                        icon : 'success',
+                        title: 'Data Successfully Collected!',
+                        html: 'Proceed to see',
+                        }).then(() => {
+                            window.location.replace('/display')
+                        })
+                
+            },
+            beforeSend: () => {
+                Swal.fire({
+                    title: 'Wait a bit!',
+                    html: 'This may take some time',
+                    timerProgressBar: true,
+                    onBeforeOpen: (
+                        
+                    ) => {
+                        Swal.showLoading();
+                    },
+                    })
+            },
+            })
+        });
+        })
+    </script>
+</body>
+
+</html>

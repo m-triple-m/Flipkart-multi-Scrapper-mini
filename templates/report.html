@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block css %}{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid mt-5">
+    <p class="h1 text-center">Scrapping Results</p>
+    
+    <table class="table table-dark table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Search Date</th>
+                <th>Maximum Pages</th>
+                <th>Datafile name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in data %}
+            <tr>
+                <td>{{record.product}}</td>
+                <td>{{record.created}}</td>
+                <td>{{record.pages}}</td>
+                <td>{{record.data}}</td>
+                <td>
+                    <a href="/scrapdata?id={{record.id}}" class="btn btn-primary">View Details</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+{% block js %}
+<script>
+    $(document).ready(() => {
+        del = (id) => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+                }).then((result) => {
+                    if(result.value){
+                        $.get('/delete', {id : id}, (data) => {
+                            console.log(data);
+                            location.reload(true);
+                        })
+                    }
+                })
+        }
+    });
+</script>
+{% endblock %}

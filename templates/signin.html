@@ -1,0 +1,81 @@
+{% extends 'layout.html' %}
+
+{% block css %}{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <p class="h1 text-center text-light">Ecommerce Website Multipage Scrapper</p>
+    <div class="row justify-content-center">
+        
+        <div class="col-md-4">
+            <div class="card mt-5 bg-dark">
+                <div class="card-body text-light">
+                    
+                    <div class="text-center">
+                        <img src="static/login-top.png" style="height: 150px;">
+                        <p class="h4">SIGN IN</p>
+                    </div>
+
+                    <!-- <form method="POST"> -->
+                        <label class="mt-4">Username</label>
+                        <input class="form-control" name="username" id="username" required>
+
+                        <label class="mt-4">Password</label>
+                        <input class="form-control mb-5" name="password" id="password" type="password" required>
+                        
+                        <button class="btn btn-danger btn-block mt-5" id="signin">Login</button>
+                    <!-- </form> -->
+                    <hr>
+                    <a href="/signup">Register new Account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script>
+    $(document).ready(() => {
+
+        $('#signin').click(() => {
+            const username = $('#username').val()
+            const password = $('#password').val()
+
+            const formdata = {
+                username : username,
+                password : password
+            }
+
+            $.ajax({url : '/signin', data : formdata, method : "post", complete : (data) => {
+                console.log(data);
+                if(data.responseJSON == 'success'){
+                    window.location.replace('/home')
+                }else if(data.responseJSON == 'failed'){
+                    Swal.fire({
+                        icon : 'error',
+                        title: 'Incorrect username or password!',
+                        html: 'Please try again',
+                        })
+                }
+                
+            },
+            beforeSend: () => {
+                Swal.fire({
+                    title: 'Wait a bit!',
+                    html: 'This may take some time',
+                    timerProgressBar: true,
+                    onBeforeOpen: (
+                        
+                    ) => {
+                        Swal.showLoading();
+                    },
+                    })
+            },
+            })
+        });
+
+    });
+</script>
+{% endblock %}

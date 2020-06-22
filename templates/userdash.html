@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+<style>
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-3">
+            <div class="card">
+                <div class="card-body">
+                    <p class="h4">Hello, {{userdetails.username}}</p>
+                    <p class="h6">email : {{userdetails.email}}</p>
+                    <p class="h6">password : {{userdetails.password}}</p>
+
+                    <hr>
+
+                    <a href="/report" class="btn btn-primary btn-block">HISTORY</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-9">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Date</th>
+                                <th>Filename</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in history %}
+                            <tr>
+                                <td>{{record.product}}</td>
+                                <td>{{record.created}}</td>
+                                <td>{{record.data}}</td>
+                                <td><a href="download/{{record.data}}" class="btn btn-secondary">Download Data</a>
+                                    <button onclick="del('{{record.id}}')" class="btn btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script>
+    $(document).ready(() => {
+
+        del = (id) => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+                }).then((result) => {
+                    if(result.value){
+                        $.get('/delete', {id : id}, (data) => {
+                            console.log(data);
+                            location.reload(true);
+                        })
+                    }
+                })
+        }
+
+    });
+</script>
+{% endblock %}

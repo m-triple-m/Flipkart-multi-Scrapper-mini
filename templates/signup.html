@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+    <style>
+        .reg-top{
+            background-image: url('static/bg.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            border-radius: 4px 0px 0px 4px;
+        }
+
+        /* .card-body{
+            padding-top: 0px;
+            padding-bottom: 0px;
+            padding-left: 15px;
+        } */
+        .card{
+            border: 0px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container" style="margin-top: 10rem;">
+    <p class="h1 text-center text-light">Ecommerce Website Multipage Scrapper</p>
+    <div class="card bg-dark">
+        <div class="row justify-content-center">
+            <div class="col-md-7 reg-top">
+                <!-- <img src="/static/reg-top.jpg" style="height: 25rem;"> -->
+            </div>
+            <div class="col-md-5">
+                <div class="card-body text-light">
+                
+                    <p class="h2 text-center">SIGN UP</p>
+                    <hr>
+                    <!-- <form method="post"> -->
+                        <label class="mt-4">Username</label>
+                        <input class="form-control" name="username" id="username" required>
+
+                        <label class="mt-4">Email</label>
+                        <input class="form-control" name="email" id="email" required>
+        
+                        <label class="mt-4">Password</label>
+                        <input class="form-control mb-5" id="password" name="password" type="password" required>
+                        
+                        <button class="btn btn-danger btn-block mt-5" id="signup">Sign Up</button>
+                    <!-- </form> -->
+                    <hr>
+                    <a href="/signin">Already registered?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+
+    <script>
+        $(document).ready(() => {
+
+            $('#signup').click(() => {
+                const username = $('#username').val()
+                const email = $('#email').val()
+                const password = $('#password').val()
+
+                const formdata = {
+                    username : username,
+                    email : email,
+                    password : password
+                }
+
+                $.ajax({url : '/signup', data : formdata, method : "post", complete : (data) => {
+                    console.log(data);
+                    // sessionStorage.setItem('data', JSON.stringify(data.responseJSON));
+                    if(data.responseJSON == 'success'){
+                        Swal.fire({
+                        icon : 'success',
+                        title: 'Registered Successfully!',
+                        html: 'You may now login to continue',
+                        }).then(() => {
+                            window.location.replace('/signin')
+                        })
+                    }
+                    
+                },
+                beforeSend: () => {
+                    Swal.fire({
+                        title: 'Wait a bit!',
+                        html: 'This may take some time',
+                        timerProgressBar: true,
+                        onBeforeOpen: (
+                            
+                        ) => {
+                            Swal.showLoading();
+                        },
+                        })
+                },
+                })
+            });
+
+        });
+    </script>
+
+{% endblock %}

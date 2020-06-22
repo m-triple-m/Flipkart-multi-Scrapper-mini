@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block css %}{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid mt-5">
+    <p class="h1 text-center">Scrapping Details</p>
+    <hr>
+    <a href="/scrapdata?id={{id}}&sortprice=1" class="btn btn-danger">Sort Price : Low to High</a>
+    <a href="/scrapdata?id={{id}}&sortprice=2" class="btn btn-danger">Sort Price : High to Low</a>
+    <table class="table table-dark table-striped table-hover mt-5">
+        <thead>
+            <tr>
+                <th>S. No.</th>
+                <th>Product Name</th>
+                <th>No. of reviews</th>
+                <th>Average Rating</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, item in data.iterrows() %}
+            <tr>
+                <td>{{index+1}}</td>
+                <td><a href="{{item['link']}}" class="h5" style="color : white">{{item['name']}}</a></td>
+                <td>{{item['rating']}}</td>
+                <td>{{item['avgrating']}}</td>
+                <td class="h4">{{item['price']}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+{% block js %}
+<script>
+    $(document).ready(() => {
+        
+    });
+</script>
+{% endblock %}
